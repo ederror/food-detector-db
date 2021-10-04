@@ -1,10 +1,11 @@
-DROP TABLE Likes;
-DROP TABLE User_allergy_info;
-DROP TABLE Meal;
-DROP TABLE User;
-DROP TABLE Food;
+DROP TABLE likes;
+DROP TABLE allergy_info;
+DROP TABLE include;
+DROP TABLE meal;
+DROP TABLE user;
+DROP TABLE food;
 
-CREATE TABLE User(
+CREATE TABLE user(
 	id varchar(30) not null,
     passwd varchar(30) not null,
     gender int not null default 0,
@@ -24,34 +25,34 @@ CREATE TABLE User(
     primary key (id)
 );
 
-CREATE TABLE User_allergy_info(
+CREATE TABLE allergy_info(
 	id int not null,
-    uid varchar(30) not null,
+    user_id varchar(30) not null,
     ingredient varchar(30) not null,
-    primary key (id, uid),
-    foreign key (uid) references User(id)
+    primary key (id, user_id),
+    foreign key (user_id) references user(id) on delete cascade on update cascade
 );
 
-CREATE TABLE Meal(
+CREATE TABLE meal(
 	id int not null,
-    uid varchar(30) not null,
-    total_calories decimal(8,2) not null,
-    total_carbo decimal(5,2) not null,
-    total_protein decimal(5,2) not null,
-    total_fat decimal(5,2) not null,
-    total_sugar decimal(5,2) not null,
-    total_salt decimal(5,2) not null,
-    total_saturated_fat decimal(5,2) not null,
-    log_time datetime not null,
+    user_id varchar(30) not null,
+    calories_total decimal(8,2) not null,
+    carbo_total decimal(5,2) not null,
+    protein_total decimal(5,2) not null,
+    fat_total decimal(5,2) not null,
+    sugar_total decimal(5,2) not null,
+    salt_total decimal(5,2) not null,
+    saturated_fat_total decimal(5,2) not null,
+	log_time datetime not null,
     image_name varchar(255) null,
     public_avail tinyint(1) not null default 1,
-    primary key (id, uid),
-    foreign key (uid) references User(id)
+    primary key (id, user_id),
+    foreign key (user_id) references user(id) on delete cascade on update cascade
 );
 
-CREATE TABLE Food (
+CREATE TABLE food (
 	id varchar(10) not null,
-    name varchar(100) not null,
+    food_name varchar(100) not null,
     serving_size decimal(5,2) not null,
     serving_size_unit varchar(5) not null,
     calorie decimal(8,2) not null,
@@ -64,26 +65,26 @@ CREATE TABLE Food (
     primary key (id)
 );
 
-CREATE TABLE Likes (
+CREATE TABLE likes (
 	id varchar(30) not null,
-    mid int not null,
-    muid varchar(30) not null,
+    meal_id int not null,
+    meal_user_id varchar(30) not null,
     log_time datetime not null,
-    primary key (id, mid, muid),
-    foreign key (id) references User(id),
-    foreign key (mid, muid) references Meal(id, uid)
+    primary key (id, meal_id, meal_user_id),
+    foreign key (id) references user(id) on delete cascade on update cascade,
+    foreign key (meal_id, meal_user_id) references meal(id, user_id) on delete cascade on update cascade
 );
 
-CREATE TABLE Include (
-	mid int not null,
-    uid varchar(30) not null,
-    fid varchar(10) not null,
+CREATE TABLE include (
+	meal_id int not null,
+    meal_user_id varchar(30) not null,
+    food_id varchar(10) not null,
     amount int not null,
     amount_unit varchar(5) not null,
     x decimal(10,2) not null,
     y decimal(10,2) not null,
-    primary key (mid, uid, fid),
-    foreign key (mid, uid) references Meal(id, uid),
-    foreign key (fid) references Food(id)
+    primary key (meal_id, meal_user_id, food_id),
+    foreign key (meal_id, meal_user_id) references meal(id, user_id) on delete cascade on update cascade,
+    foreign key (food_id) references food(id) on delete cascade on update cascade
 );
 
