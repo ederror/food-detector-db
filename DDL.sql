@@ -8,6 +8,8 @@ DROP TABLE food;
 CREATE TABLE user(
 	id varchar(30) not null,
     passwd varchar(30) not null,
+    email varchar(50) not null unique,
+    phone varchar(30) not null unique,
     gender int not null default 0,
     age int not null default 20,
     height int not null default 170,
@@ -21,7 +23,7 @@ CREATE TABLE user(
     sugar decimal(5,2) not null default -1,
     salt decimal(5,2) not null default -1,
     saturated_fat decimal(5,2) not null default -1,
-    intf_type tinyint not null,
+    intf_type tinyint not null default 0,
     primary key (id)
 );
 
